@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Freetime-Base | Tools Hub</title>
+
+<link rel="icon" type="image/png" href="https://codehs.com/uploads/0f25bac4dd551fb1876017c0565abb9a">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #020617;
+    overflow-x: hidden;
+    color: white;
+}
+
+/* ===== BACKGROUND (Music Hub style) ===== */
+#bgCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: #020617;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:72px;
+    height:100vh;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(12px);
+    border-right:1px solid rgba(0,180,255,0.18);
+    overflow:hidden;
+    transition:0.28s;
+    z-index:1000;
+}
+
+.sidebar:hover{
+    width:220px;
+    background:rgba(0,10,30,0.82);
+    box-shadow:0 0 30px rgba(0,180,255,0.18);
+}
+
+.logo{
+    height:72px;
+    display:flex;
+    align-items:center;
+    padding-left:18px;
+    font-size:28px;
+    color:#00bfff;
+    font-weight:bold;
+    text-shadow:0 0 15px #00bfff;
+}
+
+.logo span{
+    opacity:0;
+    margin-left:12px;
+    font-size:20px;
+    transition:0.25s;
+}
+
+.sidebar:hover .logo span{opacity:1;}
+
+.sidebar a{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    width:100%;
+    height:60px;
+    padding-left:20px;
+    text-decoration:none;
+    color:white;
+    font-size:30px;
+    transition:0.25s;
+    white-space:nowrap;
+}
+
+.sidebar a span{
+    opacity:0;
+    transform:translateX(-10px);
+    transition:0.25s;
+    font-size:15px;
+    font-weight:700;
+}
+
+.sidebar:hover a span{
+    opacity:1;
+    transform:translateX(0);
+}
+
+.sidebar a:hover{
+    background:rgba(0,180,255,0.14);
+    color:#00bfff;
+    box-shadow:inset 0 0 18px rgba(0,180,255,0.18);
+}
+/* TITLE */
+h1 {
+    text-align:center;
+    font-size:50px;
+    padding:120px 20px 40px;
+    text-shadow:0 0 20px cyan;
+}
+
+/* GRID */
+.container{
+    margin-left:90px;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    position:relative;
+    z-index:2;
+}
+
+/* CARD */
+.card{
+    height:200px;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    cursor:pointer;
+    transition:.3s;
+    border:1px solid transparent;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:cyan;
+    box-shadow:0 0 18px rgba(0,255,255,.25);
+}
+
+.card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.btn{
+    padding:10px 20px;
+    border:1px solid cyan;
+    background:transparent;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+}
+
+.btn:hover{
+    background:cyan;
+    color:black;
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<canvas id="bgCanvas"></canvas>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<div class="logo"><span>FreeTime-Base</span></div>
+
+<a href="index.html">🏠 <span>Home</span></a>
+<a href="Games.html">🎮 <span>Games</span></a>
+<a href="Music.html">🎵 <span>Music</span></a>
+<a href="Tools.html">🧩 <span>Tools</span></a>
+<a href="HP.html">💬 <span>Help</span></a>
+<a href="Settings.html">⚙️ <span>Settings</span></a>
+</div>
+<h1>🌀Tools🌀</h1>
+<div class="container">
+
+
+<!-- CARD -->
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        <a href="https://www.youtube.com" target="blank" class="btn">YouTube</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://kahoot.it//" target="blank" class="btn">Kahhot</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+      
+        <a href="https://blooket.com//" target="blank" class="btn">Blooket</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://wayground.com/join/dashboard/" target="blank" class="btn">Wayground</a>
+    </div>
+</div>
+
+<div class="card reveal">
+ <img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://codehs.com/student/6622330/section/732882/assignments" target="blank" class="btn">CodeHS</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">    
+       
+        <a href="https://docs.google.com/presentation/u/0/?ec=wgc-slides-hero-goto&tgif=d" target="blank" class="btn">Google Slides</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">    
+        
+        <a href="https://hac.friscoisd.org/HomeAccess/Home/WeekView" target="blank" class="btn">HAC</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+
+        <a href="https://pbisrstudent.navigate360.com/student/student.php" target="blank" class="btn">PBIS Points</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+      
+        <a href="https://students.enrichingstudents.com/" target="blank" class="btn">Cougar Den Sign ups</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+       
+        <a href="https://www.canva.com/templates" target="blank" class="btn">Canva</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://frisco.schoolobjects.com/student/assignments?tab=tests" target="blank" class="btn">AOL Testing</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://studyhardd.firebaseapp.com/" target="blank" class="btn">Codelisnter</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://fisd.instructure.com/courses" target="blank" class="btn">Courses</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://cstimer.net/" target="blank" class="btn">Cube Timer</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://18940590-s.codehs.io/index.html" target="blank" class="btn">Freetime games v1</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://cdn.prod.website-files.com/65849828bf90a121b81dc3a5/65afea09c4f7a02afbb9d876_Rubiks_SolutionGuide_3x3-Original.pdf" target="blank" class="btn">Cube Online</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://studio.code.org/home" target="blank" class="btn">Code Website</a>
+    </div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="NotePad.html" target="blank" class="btn">NotePad</a>
+    </div>
+</div>
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://www.discoveryeducation.com/" target="blank" class="btn">Education Platform</a>
+    </div>
+</div>
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+    <div class="overlay">
+        
+        <a href="https://thetruesize.com/#?borders=1~!MTM2OTU2MTQ.Mzg0MTQ2Mw*MzE3MDY0OTk(NzY5NDc4MA~!CONTIGUOUS_US*MTAwMjQwNzU.MjUwMjM1MTc(MTc1)MQ~!IN*NTI2NDA1MQ.Nzg2MzQyMQ)Mg~!CN*OTkyMTY5Nw.NzMxNDcwNQ(MjI1)Mw" target="blank" class="btn">True Size Of</a>
+    </div>
+</div>
+<!-- ADD THESE NEW TOOL CARDS inside your .container under existing cards -->
+
+<!-- AI / STUDY TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://chat.openai.com/" target="_blank" class="btn">ChatGPT</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.google.com/" target="_blank" class="btn">Google Search</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://quizlet.com/" target="_blank" class="btn">Quizlet</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.khanacademy.org/" target="_blank" class="btn">Khan Academy</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.duolingo.com/" target="_blank" class="btn">Duolingo</a>
+</div>
+</div>
+
+<!-- DESIGN TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.photopea.com/" target="_blank" class="btn">Photopea</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://pixlr.com/" target="_blank" class="btn">Pixlr</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.remove.bg/" target="_blank" class="btn">Remove BG</a>
+</div>
+</div>
+
+<!-- CODE TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://replit.com/" target="_blank" class="btn">Replit</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://github.com/" target="_blank" class="btn">GitHub</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://codepen.io/" target="_blank" class="btn">CodePen</a>
+</div>
+</div>
+
+<!-- FILE TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://smallpdf.com/" target="_blank" class="btn">SmallPDF</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.ilovepdf.com/" target="_blank" class="btn">iLovePDF</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://drive.google.com/" target="_blank" class="btn">Google Drive</a>
+</div>
+</div>
+
+<!-- MAP / FUN TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://maps.google.com/" target="_blank" class="btn">Google Maps</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://earth.google.com/" target="_blank" class="btn">Google Earth</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://geoguessr.com/" target="_blank" class="btn">GeoGuessr</a>
+</div>
+</div>
+
+<!-- EXTRA TOOLS -->
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://translate.google.com/" target="_blank" class="btn">Translator</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://calendar.google.com/" target="_blank" class="btn">Calendar</a>
+</div>
+</div>
+
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://mail.google.com/" target="_blank" class="btn">Gmail</a>
+</div>
+</div>
+<div class="card reveal">
+<img src="https://codehs.com/uploads/ac60b0b0888db4b00c90cf83379f88d0">
+<div class="overlay">
+<a href="https://www.connectionsacademy.com/texas-virtual-school/" target="_blank" class="btn">Online school texas</a>
+</div>
+</div>
+</div>
+
+<!-- ===== PARTICLE BACKGROUND SCRIPT (FROM MUSIC HUB) ===== -->
+<script>
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+vx:(Math.random()-0.5)*1,
+vy:(Math.random()-0.5)*1
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let i=0;i<particles.length;i++){
+let p = particles[i];
+
+p.x += p.vx;
+p.y += p.vy;
+
+if(p.x<0||p.x>canvas.width) p.vx *= -1;
+if(p.y<0||p.y>canvas.height) p.vy *= -1;
+
+ctx.fillStyle="cyan";
+ctx.beginPath();
+ctx.arc(p.x,p.y,2,0,Math.PI*2);
+ctx.fill();
+
+for(let j=i;j<particles.length;j++){
+let p2 = particles[j];
+let dist = Math.hypot(p.x-p2.x,p.y-p2.y);
+
+if(dist<120){
+ctx.strokeStyle="rgba(0,255,255,0.15)";
+ctx.beginPath();
+ctx.moveTo(p.x,p.y);
+ctx.lineTo(p2.x,p2.y);
+ctx.stroke();
+}
+}
+}
+
+requestAnimationFrame(draw);
+}
+
+draw();
+
+window.addEventListener("resize",()=>{
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>

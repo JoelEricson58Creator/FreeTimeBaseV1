@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Freetime-Base | Music Hub V3</title>
+
+<link rel="icon" type="image/png" href="https://codehs.com/uploads/0f25bac4dd551fb1876017c0565abb9a">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+/* BACKGROUND CANVAS */
+#bgCanvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+background:#020617;
+}
+
+/* BODY */
+body{
+margin:0;
+padding:0;
+font-family:Segoe UI,sans-serif;
+color:white;
+min-height:100vh;
+padding-bottom:130px;
+overflow-x:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+width:72px;
+height:100vh;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(12px);
+border-right:1px solid rgba(0,180,255,.18);
+overflow:hidden;
+transition:.28s;
+z-index:1000;
+}
+
+.sidebar:hover{
+width:220px;
+background:rgba(0,10,30,.82);
+box-shadow:0 0 30px rgba(0,180,255,.18);
+}
+
+.logo{
+height:72px;
+display:flex;
+align-items:center;
+padding-left:18px;
+font-size:28px;
+color:#00bfff;
+font-weight:bold;
+text-shadow:0 0 15px #00bfff;
+}
+
+.logo span{
+opacity:0;
+margin-left:12px;
+font-size:20px;
+transition:.25s;
+}
+
+.sidebar:hover .logo span{
+opacity:1;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+gap:18px;
+width:100%;
+height:60px;
+padding-left:20px;
+text-decoration:none;
+color:white;
+font-size:30px;
+transition:.25s;
+white-space:nowrap;
+}
+
+.sidebar a span{
+opacity:0;
+transform:translateX(-10px);
+transition:.25s;
+font-size:15px;
+font-weight:700;
+}
+
+.sidebar:hover a span{
+opacity:1;
+transform:translateX(0);
+}
+
+.sidebar a:hover{
+background:rgba(0,180,255,.14);
+color:#00bfff;
+box-shadow:inset 0 0 18px rgba(0,180,255,.18);
+}
+
+/* TITLE */
+h1{
+text-align:center;
+padding:20px;
+font-size:45px;
+text-shadow:0 0 20px cyan;
+position:relative;
+z-index:2;
+}
+
+/* SEARCH */
+#searchBar{
+display:block;
+width:60%;
+max-width:600px;
+margin:10px auto 25px;
+padding:12px;
+border-radius:12px;
+border:1px solid cyan;
+background:#0f172a;
+color:white;
+font-size:16px;
+outline:none;
+position:relative;
+z-index:2;
+}
+
+/* GRID */
+.container{
+margin-left:90px;
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+position:relative;
+z-index:2;
+}
+
+/* CARD */
+.card{
+height:220px;
+border-radius:16px;
+overflow:hidden;
+position:relative;
+cursor:pointer;
+transition:.3s;
+border:1px solid transparent;
+}
+
+.card:hover{
+transform:translateY(-6px);
+border-color:cyan;
+box-shadow:0 0 18px rgba(0,255,255,.25);
+}
+
+.card img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.overlay{
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.55);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:10px;
+text-align:center;
+gap:10px;
+}
+
+.overlay h2{
+font-size:20px;
+text-shadow:0 0 8px black;
+}
+
+/* BUTTONS */
+.btn-ctrl{
+padding:10px 24px;
+border:2px solid cyan;
+background:transparent;
+color:cyan;
+font-weight:bold;
+border-radius:22px;
+cursor:pointer;
+transition:.25s;
+}
+
+.btn-ctrl:hover{
+background:cyan;
+color:black;
+box-shadow:0 0 20px cyan;
+transform:scale(1.05);
+}
+
+/* PLAYER */
+.player-bar{
+position:fixed;
+left:0;
+bottom:0;
+width:100%;
+background:rgba(10,15,30,.96);
+border-top:2px solid cyan;
+padding:12px;
+text-align:center;
+z-index:1000;
+}
+
+#track{
+font-size:18px;
+margin-bottom:10px;
+}
+
+.controls{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.controls button{
+padding:10px 16px;
+border:1px solid cyan;
+background:transparent;
+color:white;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+transition:.25s;
+}
+
+.controls button:hover{
+background:cyan;
+color:black;
+box-shadow:0 0 15px cyan;
+}
+
+#play.active{
+background:cyan;
+color:black;
+box-shadow:0 0 25px cyan;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="sidebar">
+<div class="logo"><span>FreeTime-Base</span></div>
+
+<a href="index.html">🏠 <span>Home</span></a>
+<a href="Games.html">🎮 <span>Games</span></a>
+<a href="Music.html">🎵 <span>Music</span></a>
+<a href="Tools.html">🧩 <span>Tools</span></a>
+<a href="HP.html">💬 <span>Help</span></a>
+<a href="Settings.html">⚙️ <span>Settings</span></a>
+</div>
+
+<h1>🌀 Music Hub 🌀</h1>
+
+<input id="searchBar" placeholder="🔍 Search songs...">
+
+<div class="container">
+
+<!-- 🔥 PASTE ALL YOUR EXISTING 18 SONG CARDS HERE EXACTLY AS YOU HAD THEM -->
+<!-- (I am NOT removing or replacing your songs so nothing breaks) -->
+
+<!-- Example format ONLY (your real ones stay unchanged): -->
+<!--
+<div class="card" data-src="YOUR_LINK" data-title="Song Name">
+<img src="YOUR_IMAGE">
+<div class="overlay"><h3>Song Name</h3></div>
+</div>
+-->
+
+       
+
+        <div class="card reveal active" data-src="https://codehs.com/uploads/185833554fcb828ae5c650df4681da3f" data-title="Beautiful Things">
+            <img src="https://codehs.com/uploads/a3932cda04101df0d6e0b3da52bc9534">
+            <div class="overlay"><h2>Beautiful Things</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/69a495e26872ccd993da15ed66494adf" data-title="Somebody I Used To Know">
+            <img src="https://codehs.com/uploads/e674b9d1979e52f6cf882f61f40148fc">
+            <div class="overlay"><h2>Somebody I Used To Know</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/4b9c07129989a1f7dd8eb145b9eae267" data-title="LUA NA PRAÇA">
+            <img src="https://codehs.com/uploads/3576beeb03bd19b33092368f4152dea2">
+            <div class="overlay"><h2>LUA NA PRAÇA</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/62c7309208fc860897ad1e3ceb02016d" data-title="Party in The USA">
+            <img src="https://codehs.com/uploads/00e9eee217a7e945f88edc607a5ad8d8">
+            <div class="overlay"><h2>Party in The USA</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/97f9e5483c89db372f708474b42c8ec0" data-title="My Ordinary Life">
+            <img src="https://codehs.com/uploads/a1a60eac932be062240ad00a0f399aad">
+            <div class="overlay"><h2>My Ordinary Life</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/bff8fefe4aa7a82cc2aa61085103d1fc" data-title="Wellerman">
+            <img src="https://codehs.com/uploads/6faa677c806558f410f2611e79c815fc">
+            <div class="overlay"><h2>Wellerman</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/9f10168857460e60fa146bbdbfdc1fd2" data-title="Just a Kid">
+            <img src="https://codehs.com/uploads/ab15a63c0f6d004e1fcf2a851642b4bd">
+            <div class="overlay"><h2>Just a Kid</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/d7b2b357f9d92c23e9feb7fa44442f5c" data-title="Back To Friends">
+            <img src="https://codehs.com/uploads/51992a627dcdbabdaffebca29ee251bc">
+            <div class="overlay"><h2>Back To Friends</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/c7ec8a9729eb039e0983b2d09302b34c" data-title="Rock you">
+            <img src="https://codehs.com/uploads/188acb0cf1d0f84ebe9636aa2319b0d9">
+            <div class="overlay"><h2>Rock You</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+       
+         <div class="card reveal active" data-src="https://codehs.com/uploads/966b6c737dae77ebd2bf4a6c3e5769a8" data-title="Blue">
+            <img src="https://codehs.com/uploads/3e6288e34c7efb1e33bfa9a7d0071834">
+            <div class="overlay"><h2>Blue</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+         <div class="card reveal active" data-src="https://codehs.com/uploads/9ea62245065bc3682305ea3714f06eef" data-title="Spirits">
+            <img src="https://codehs.com/uploads/672969b89181c2941bef9f6a48501c97">
+            <div class="overlay"><h2>Spirts</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        
+        <div class="card reveal active" data-src="https://codehs.com/uploads/984f8f72b3e2005dc9401633764d7fed" data-title="Ordinary">
+            <img src="https://codehs.com/uploads/2636b7b0eb6316057b52fafb297b6cde">
+            <div class="overlay"><h2>Ordinary</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+         <div class="card reveal active" data-src="https://codehs.com/uploads/5f2cf154a487f93479e62fe4657a8951" data-title="Love Again">
+            <img src="https://codehs.com/uploads/74cfa5c6c9edf5751623cc36427a8ff6">
+            <div class="overlay"><h2>Love Again</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+         <div class="card reveal active" data-src="https://codehs.com/uploads/548785cd7e72638bbd078e6a7374a8f9" data-title="Stay">
+            <img src="https://codehs.com/uploads/c3ae275f61192937fb0519246dd93697">
+            <div class="overlay"><h2>Stay</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+           <div class="card reveal active" data-src="https://codehs.com/uploads/0635371fe76f4f0b3beea3ee82752e0a" data-title="Mercy">
+            <img src="https://codehs.com/uploads/c26b5e62a352baafff0235c61184dd28">
+            <div class="overlay"><h2>Mercy</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+        <div class="card reveal active" data-src="https://codehs.com/uploads/b5317e43d42cd45d50423f6610746430" data-title="Baby">
+            <img src="https://codehs.com/uploads/352b502e968d803d07b7ab970a9464d4">
+            <div class="overlay"><h2>Baby</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+         <div class="card reveal active" data-src="https://codehs.com/uploads/9473cc4b9b33c2acffc6f835cc9183da" data-title="Mary on a cross">
+            <img src="https://codehs.com/uploads/3ddfcc268a7988d0438c530204a57046">
+            <div class="overlay"><h2>Mary On a cross</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+    
+   
+ <div class="card reveal active" data-src="https://codehs.com/uploads/e261de3fe2b24b490058647c6d23e222" data-title="Enie Meenie">
+       <img src="https://codehs.com/uploads/21e271f407913d64bd373da1d37a5108">     
+            <div class="overlay"><h2>Enie meenie</h2><button class="btn-ctrl">PLAY</button></div>
+        </div>
+<div class="card reveal" data-src="https://codehs.com/uploads/6bcdcce0bd83d0a9ef6119128ff86e32" data-title="Blinding Lights">
+    <img src="https://codehs.com/uploads/fa955135bd4127d37b373c1e1c7106ab">
+    <div class="overlay"><h2>Blinding Lights</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/c7392a6b9c870c056a27076beb3dc4b5" data-title="Closer">
+    <img src="https://codehs.com/uploads/fd259ffa8cab68e2a823680d70c2bdeb">
+    <div class="overlay"><h2>Closer</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/8f470b50369bcdf364aaec931764d3a3" data-title="Enemy">
+    <img src="https://codehs.com/uploads/4def9e55ae3bd0a09e29c54391c6c876">
+    <div class="overlay"><h2>Enemy</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/0ee0c0a1657b9f6cfd4cc41540fd91b6" data-title="Believer">
+    <img src="https://codehs.com/uploads/46ce5f13f047df53eeb7be8f4a1a9a4d">
+    <div class="overlay"><h2>Believer</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/cf88fee4491b3439eb9bbd5d3cd7c9f4" data-title="Beauty And A Beat">
+    <img src="https://codehs.com/uploads/28edf4e3870aeae2f3a9b94660d29a72">
+    <div class="overlay"><h2>Beauty And A Beat</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/8c7cb1eb9f1b955176e4b6e26d0ca2e5" data-title="Counting Stars">
+    <img src="https://codehs.com/uploads/6ebbf7f7ee53c1eab958cc2fc14fa5ad">
+    <div class="overlay"><h2>Counting Stars</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/a46cd6ee069bfccdcdb57d67a0225843" data-title="Shape of You">
+    <img src="https://codehs.com/uploads/14bfdbe90ac9185977cd31ebca6d6ba5">
+    <div class="overlay"><h2>Shape of You</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/6ce8384180e23e7970d79a8ff3b27acc" data-title="Stereo Hearts">
+    <img src="https://codehs.com/uploads/036ebcd778fe1f698591c7b1c08d57ea">
+    <div class="overlay"><h2>Stereo Hearts</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/f7f1201c02b029526b90962e1759e602" data-title="Faded">
+    <img src="https://codehs.com/uploads/522c9b1f4292a64ca0344cc2888fadb1">
+    <div class="overlay"><h2>Faded</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/554ad4f766e69bd539720d3218eabaf3" data-title="Castle On The Hill">
+    <img src="https://codehs.com/uploads/b104f2c85b24e86b9c3b2f4338041413">
+    <div class="overlay"><h2>Castle On The Hill</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/816923f3f241032bb7d2e702990817fb" data-title="Stereo Love">
+    <img src="https://codehs.com/uploads/b7f38d7c2f3a955a51c9ad7fe295e260">
+    <div class="overlay"><h2>Stero Love</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/afe6ec2c35659841a0b94863478fd742" data-title="Bones">
+    <img src="https://codehs.com/uploads/3661d59eb0bb2c3efdb06d2ccf9e0445">
+    <div class="overlay"><h2>Bones</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/8c7d2f733f3bfc83ea1e2b67fdba5103" data-title="Thunder">
+    <img src="https://codehs.com/uploads/4d08b05ff2fdc82b08a50efe58b86055">
+    <div class="overlay"><h2>Thunder - Imagine Dragons</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/76fa3ec97df2427060eab56c4489e940" data-title="Unstoppable">
+    <img src="https://codehs.com/uploads/ed7d722f3d7fb5a20ed8cbe6a9e29ed3">
+    <div class="overlay"><h2>Unstoppable - Sia</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/c53d667eabe42335077781d17a8c2599" data-title="The Nights">
+    <img src="https://codehs.com/uploads/2a887111bddb16c3af4b35191252c362">
+    <div class="overlay"><h2>The Nights - Avicii</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/bdad734fe40deedf9351a3d6684d02e1" data-title="Despacito">
+    <img src="https://codehs.com/uploads/616e93a7fca77627fcca680f39c77a09">
+    <div class="overlay"><h2>Despacito</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/9d8e8360b95a989bf7ed18c4d92a8fe5" data-title="Bye Bye Bye">
+    <img src="https://codehs.com/uploads/5058c15d75506d94ece58568370b1aec">
+    <div class="overlay"><h2>Bye Bye Bye - *NSYNC</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/88e097bba22ffd00648370f70a75ccb9" data-title="FRIENDS">
+    <img src="https://codehs.com/uploads/b90400e19575efbfdcdb4d8051b6d1cf">
+    <div class="overlay"><h2>FRIENDS - Marshmello & Anne-Marie</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+
+<div class="card reveal" data-src="https://codehs.com/uploads/e5f834b6c18f1afd6aa955a18c1d9328" data-title="Alone">
+    <img src="https://codehs.com/uploads/3a11d83fcb6e91e29f6fb69ef55ee4e8">
+    <div class="overlay"><h2>Alone - Marshmello</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/77da590ce4313094fa921d5218a9bb0c" data-title="Sorry">
+    <img src="https://codehs.com/uploads/6be91f06eb600efbb4a17dccaee3e4fa">
+    <div class="overlay"><h2>Sorry</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/91479e138e22d51ae21d8caf1a1c8626" data-title="Kutty Story">
+    <img src="https://codehs.com/uploads/0d41ad59125af0e85d619a23b54c295b">
+    <div class="overlay"><h2>Kutty Story</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/8f6c1a9382898fb6f087e58f19aafa7e" data-title="All Is Well">
+    <img src="https://codehs.com/uploads/76731143aaac6b3a23606aa98fb48f6a">
+    <div class="overlay"><h2>All Is Well</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/923295548234fc206c2f5d37a1707b60" data-title="PayPhone">
+    <img src="https://codehs.com/uploads/b418ee0593a8e1a3c22e60abb72fb451">
+    <div class="overlay"><h2>PayPhone</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+<div class="card reveal" data-src="https://codehs.com/uploads/6d8a59f5faa79d0bf58455012504d47f" data-title="What Do You Mean?">
+    <img src="https://codehs.com/uploads/39e6641926989b0be050c5bb31b19a6d">
+    <div class="overlay"><h2>What Do You Mean?</h2><button class="btn-ctrl">PLAY</button></div>
+</div>
+</div>
+
+<div class="player-bar">
+<div id="track">No Song Playing</div>
+
+<div class="controls">
+<button id="prev">⏮</button>
+<button id="back">-5s</button>
+<button id="play">▶</button>
+<button id="fwd">+5s</button>
+<button id="next">⏭</button>
+<button id="loop">🔁</button>
+<button id="shuffle">🔀</button>
+</div>
+</div>
+
+<script>
+/* ===== PARTICLE BACKGROUND ===== */
+const canvas = document.getElementById("bgCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+vx:(Math.random()-0.5)*1,
+vy:(Math.random()-0.5)*1
+});
+}
+
+function draw(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let i=0;i<particles.length;i++){
+let p = particles[i];
+
+p.x += p.vx;
+p.y += p.vy;
+
+if(p.x<0||p.x>canvas.width) p.vx *= -1;
+if(p.y<0||p.y>canvas.height) p.vy *= -1;
+
+ctx.fillStyle="cyan";
+ctx.beginPath();
+ctx.arc(p.x,p.y,2,0,Math.PI*2);
+ctx.fill();
+
+for(let j=i;j<particles.length;j++){
+let p2 = particles[j];
+let dist = Math.hypot(p.x-p2.x,p.y-p2.y);
+
+if(dist<120){
+ctx.strokeStyle="rgba(0,255,255,0.15)";
+ctx.beginPath();
+ctx.moveTo(p.x,p.y);
+ctx.lineTo(p2.x,p2.y);
+ctx.stroke();
+}
+}
+}
+
+requestAnimationFrame(draw);
+}
+
+draw();
+
+window.addEventListener("resize",()=>{
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+});
+</script>
+
+<!-- YOUR ORIGINAL MUSIC JS BELOW (unchanged) -->
+<script>
+const audio = new Audio();
+const cards = document.querySelectorAll(".card");
+
+const track = document.getElementById("track");
+const prev = document.getElementById("prev");
+const back = document.getElementById("back");
+const play = document.getElementById("play");
+const fwd = document.getElementById("fwd");
+const next = document.getElementById("next");
+const loop = document.getElementById("loop");
+const shuffle = document.getElementById("shuffle");
+
+let index = 0;
+let loopOn = false;
+let shuffleOn = false;
+
+function playSong(i){
+if(i < 0) i = cards.length-1;
+if(i >= cards.length) i = 0;
+
+index = i;
+audio.src = cards[i].dataset.src;
+track.innerText = cards[i].dataset.title;
+audio.loop = loopOn;
+audio.play();
+play.classList.add("active");
+}
+
+cards.forEach((card,i)=>{
+card.onclick = ()=>playSong(i);
+card.querySelector("button").onclick = (e)=>{
+e.stopPropagation();
+playSong(i);
+};
+});
+
+play.onclick = ()=>{
+if(!audio.src){
+playSong(0);
+return;
+}
+
+if(audio.paused){
+audio.play();
+play.classList.add("active");
+}else{
+audio.pause();
+play.classList.remove("active");
+}
+};
+
+next.onclick = ()=>{
+if(shuffleOn){
+playSong(Math.floor(Math.random()*cards.length));
+}else{
+playSong(index+1);
+}
+};
+
+prev.onclick = ()=>playSong(index-1);
+
+back.onclick = ()=>{
+audio.currentTime = Math.max(0,audio.currentTime-5);
+};
+
+fwd.onclick = ()=>{
+audio.currentTime = Math.min(audio.duration || 0,audio.currentTime+5);
+};
+
+loop.onclick = ()=>{
+loopOn = !loopOn;
+audio.loop = loopOn;
+loop.style.background = loopOn ? "cyan" : "transparent";
+loop.style.color = loopOn ? "black" : "white";
+};
+
+shuffle.onclick = ()=>{
+shuffleOn = !shuffleOn;
+shuffle.style.background = shuffleOn ? "cyan" : "transparent";
+shuffle.style.color = shuffleOn ? "black" : "white";
+};
+
+audio.onended = ()=>{
+if(loopOn) return;
+
+if(shuffleOn){
+playSong(Math.floor(Math.random()*cards.length));
+}else{
+playSong(index+1);
+}
+};
+
+document.getElementById("searchBar").addEventListener("input",function(){
+let v = this.value.toLowerCase();
+
+cards.forEach(card=>{
+card.style.display =
+card.dataset.title.toLowerCase().includes(v)
+? "block" : "none";
+});
+});
+</script>
+
+</body>
+</html>

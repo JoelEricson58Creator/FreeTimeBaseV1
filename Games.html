@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Freetime-Base | Games Hub</title>
+<link rel="icon" type="image/png" href="https://codehs.com/uploads/e37bab97e107031cf1eb214f9fb034d2">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+background:radial-gradient(circle at center,#061122,#000);
+color:white;
+overflow-x:hidden;
+min-height:100vh;
+}
+
+/* GRAPHICS */
+#bg,#stars,#particles{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+}
+
+#bg{z-index:-5;}
+#stars{z-index:-4;}
+#particles{z-index:-3;pointer-events:none;}
+
+.glow-orb{
+position:fixed;
+border-radius:50%;
+filter:blur(75px);
+opacity:.28;
+animation:float 8s ease-in-out infinite alternate;
+z-index:-2;
+}
+
+.orb1{
+width:240px;
+height:240px;
+background:#00bfff;
+top:8%;
+left:8%;
+}
+
+.orb2{
+width:300px;
+height:300px;
+background:#0044ff;
+bottom:10%;
+right:10%;
+animation-delay:2s;
+}
+
+.orb3{
+width:180px;
+height:180px;
+background:#00ffff;
+top:45%;
+right:32%;
+animation-delay:4s;
+}
+
+@keyframes float{
+from{transform:translate(0,0) scale(1);}
+to{transform:translate(30px,-35px) scale(1.15);}
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+width:72px;
+height:100vh;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(12px);
+border-right:1px solid rgba(0,180,255,.18);
+overflow:hidden;
+transition:.28s;
+z-index:1000;
+}
+
+.sidebar:hover{
+width:220px;
+background:rgba(0,10,30,.82);
+box-shadow:0 0 30px rgba(0,180,255,.18);
+}
+
+.logo{
+height:72px;
+display:flex;
+align-items:center;
+padding-left:18px;
+font-size:28px;
+color:#00bfff;
+font-weight:bold;
+text-shadow:0 0 15px #00bfff;
+}
+
+.logo span{
+opacity:0;
+margin-left:12px;
+font-size:20px;
+transition:.25s;
+}
+
+.sidebar:hover .logo span{
+opacity:1;
+}
+
+.sidebar a{
+display:flex;
+align-items:center;
+gap:18px;
+width:100%;
+height:60px;
+padding-left:20px;
+text-decoration:none;
+color:white;
+font-size:30px;
+transition:.25s;
+white-space:nowrap;
+}
+
+.sidebar a span{
+opacity:0;
+transform:translateX(-10px);
+transition:.25s;
+font-size:15px;
+font-weight:700;
+}
+
+.sidebar:hover a span{
+opacity:1;
+transform:translateX(0);
+}
+
+.sidebar a:hover{
+background:rgba(0,180,255,.14);
+color:#00bfff;
+box-shadow:inset 0 0 18px rgba(0,180,255,.18);
+}
+
+/* MAIN */
+.container{
+position:relative;
+z-index:5;
+padding:120px 40px 40px 110px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:28px;
+}
+
+h1{
+grid-column:1/-1;
+text-align:center;
+font-size:60px;
+color:#00bfff;
+text-shadow:0 0 25px #00bfff;
+margin-bottom:20px;
+}
+
+.card{
+position:relative;
+height:260px;
+border-radius:20px;
+overflow:hidden;
+background:rgba(255,255,255,.04);
+border:1px solid rgba(0,180,255,.16);
+backdrop-filter:blur(10px);
+transition:.25s;
+opacity:0;
+transform:translateY(50px);
+}
+
+.card.active{
+opacity:1;
+transform:translateY(0);
+}
+
+.card:hover{
+transform:translateY(-8px);
+box-shadow:0 0 22px rgba(0,180,255,.25);
+}
+
+.card img{
+width:100%;
+height:100%;
+object-fit:cover;
+transition:.35s;
+}
+
+.card:hover img{
+transform:scale(1.08);
+}
+
+.overlay{
+position:absolute;
+inset:0;
+background:rgba(0,0,0,.62);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+opacity:0;
+transition:.3s;
+padding:20px;
+text-align:center;
+}
+
+.card:hover .overlay{
+opacity:1;
+}
+
+.overlay h2{
+margin-bottom:12px;
+font-size:24px;
+}
+
+.btn{
+padding:10px 20px;
+border-radius:10px;
+border:1px solid #00bfff;
+color:#00bfff;
+text-decoration:none;
+font-weight:700;
+transition:.25s;
+background:rgba(0,180,255,.05);
+}
+
+.btn:hover{
+background:#00bfff;
+color:black;
+box-shadow:0 0 18px #00bfff;
+}
+
+@media(max-width:700px){
+.container{
+padding:100px 20px 20px 90px;
+}
+h1{
+font-size:42px;
+}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<canvas id="stars"></canvas>
+<canvas id="particles"></canvas>
+
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+<div class="glow-orb orb3"></div>
+
+<div class="sidebar">
+<div class="logo"><span>FreeTime-Base</span></div>
+
+<a href="index.html">🏠 <span>Home</span></a>
+<a href="Games.html">🎮 <span>Games</span></a>
+<a href="Music.html">🎵 <span>Music</span></a>
+<a href="Tools.html">🧩 <span>Tools</span></a>
+<a href="HP.html">💬 <span>Help</span></a>
+<a href="Settings.html">⚙️ <span>Settings</span></a>
+</div>
+
+
+<div class="container">
+<h1>🌀Games🌀</h1>
+
+<!-- ALL CARDS UPDATED LOGO -->
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Battle Ship</h2>
+        <a href="BS.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Whack-A-Mole</h2>
+        <a href="WAM.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Tic Tac Toe</h2>
+        <a href="TTT.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Dodge</h2>
+        <a href="D.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Rubik's Cube</h2>
+        <a href="Cube.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Cube Solver</h2>
+        <a href="Cubes.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Shooter</h2>
+        <a href="shooter.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Manchala</h2>
+        <a href="manchala.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Snakes</h2>
+        <a href="snake.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Memory Flash</h2>
+        <a href="MF.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Rock Paper Scissors</h2>
+        <a href="RPS.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Connect 4</h2>
+        <a href="C4.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<!-- EXTRA GAMES -->
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>2048 Game</h2>
+        <a href="2048.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Hangman Game</h2>
+        <a href="Hangman.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Sudoku Game</h2>
+        <a href="Sudoku.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Word Jumble</h2>
+        <a href="Jumble.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Number Sequence Game</h2>
+        <a href="Sequence.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Guess My Number Game</h2>
+        <a href="GMN.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Mental Math Game</h2>
+        <a href="MentalMath.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Pattern Recognition Game</h2>
+        <a href="Pattern.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Flappy Bird</h2>
+        <a href="Flappy.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Pong</h2>
+        <a href="Pong.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Breakout</h2>
+        <a href="Breakout.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Maze Runner</h2>
+        <a href="Maze.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Reaction Time Test</h2>
+        <a href="Reaction.html" class="btn">▶ Play</a>
+    </div>
+</div>
+
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Reach The Sky</h2>
+        <a href="Sky.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Scary Story</h2>
+        <a href="SS.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>3D Parkour</h2>
+        <a href="3P.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>3D Dodger</h2>
+        <a href="3DD.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Super Surfers</h2>
+        <a href="Surfer.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>3D Shooter</h2>
+        <a href="3DShooter.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Space Clicker</h2>
+        <a href="Clicker.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Super Market Simulator</h2>
+        <a href="Money.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Slide Puzzel</h2>
+        <a href="Slide.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Dice</h2>
+        <a href="Dice.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Snake 2.0</h2>
+        <a href="Snake2.0.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Dash</h2>
+        <a href="Dash.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Guess The Name</h2>
+        <a href="Name.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Hotel Simulator</h2>
+        <a href="Hotel.html" class="btn">▶ Play</a>
+    </div>
+</div>
+<div class="card reveal">
+    <img src="https://codehs.com/uploads/933e35cc255fb8615a62f7b13ff4f7bd">
+    <div class="overlay">
+        <h2>Brick</h2>
+        <a href="Brick.html" class="btn">▶ Play</a>
+    </div>
+</div>
+</div>
+<!-- NEW GAMES -->
+
+<script>
+/* CANVAS SIZES */
+const bg=document.getElementById("bg");
+const stars=document.getElementById("stars");
+const particles=document.getElementById("particles");
+
+const bctx=bg.getContext("2d");
+const sctx=stars.getContext("2d");
+const pctx=particles.getContext("2d");
+
+function resize(){
+bg.width=innerWidth;
+bg.height=innerHeight;
+stars.width=innerWidth;
+stars.height=innerHeight;
+particles.width=innerWidth;
+particles.height=innerHeight;
+}
+addEventListener("resize",resize);
+resize();
+
+/* NETWORK */
+let dots=[];
+for(let i=0;i<100;i++){
+dots.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+vx:(Math.random()-.5)*0.7,
+vy:(Math.random()-.5)*0.7,
+r:Math.random()*2+1
+});
+}
+
+function drawBG(){
+bctx.clearRect(0,0,bg.width,bg.height);
+
+for(let i=0;i<dots.length;i++){
+let a=dots[i];
+a.x+=a.vx;
+a.y+=a.vy;
+
+if(a.x<0||a.x>bg.width)a.vx*=-1;
+if(a.y<0||a.y>bg.height)a.vy*=-1;
+
+bctx.beginPath();
+bctx.arc(a.x,a.y,a.r,0,Math.PI*2);
+bctx.fillStyle="rgba(0,191,255,.65)";
+bctx.fill();
+
+for(let j=i+1;j<dots.length;j++){
+let b=dots[j];
+let dx=a.x-b.x;
+let dy=a.y-b.y;
+let dist=Math.sqrt(dx*dx+dy*dy);
+
+if(dist<130){
+bctx.strokeStyle="rgba(255,255,255,"+(1-dist/130)*0.12+")";
+bctx.beginPath();
+bctx.moveTo(a.x,a.y);
+bctx.lineTo(b.x,b.y);
+bctx.stroke();
+}
+}
+}
+requestAnimationFrame(drawBG);
+}
+
+/* STARS */
+let starList=[];
+for(let i=0;i<130;i++){
+starList.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+r:Math.random()*2,
+a:Math.random()*6,
+speed:Math.random()*0.02
+});
+}
+
+function drawStars(){
+sctx.clearRect(0,0,stars.width,stars.height);
+
+starList.forEach(s=>{
+s.a+=s.speed;
+let alpha=Math.abs(Math.sin(s.a));
+
+sctx.beginPath();
+sctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+sctx.fillStyle="rgba(255,255,255,"+alpha+")";
+sctx.fill();
+});
+
+requestAnimationFrame(drawStars);
+}
+
+/* FLOATING PARTICLES */
+let plist=[];
+for(let i=0;i<60;i++){
+plist.push({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+r:Math.random()*2+1,
+vx:(Math.random()-.5)*.4,
+vy:(Math.random()-.5)*.4
+});
+}
+
+function drawParticles(){
+pctx.clearRect(0,0,particles.width,particles.height);
+
+plist.forEach(p=>{
+p.x+=p.vx;
+p.y+=p.vy;
+
+if(p.x<0)p.x=innerWidth;
+if(p.x>innerWidth)p.x=0;
+if(p.y<0)p.y=innerHeight;
+if(p.y>innerHeight)p.y=0;
+
+pctx.beginPath();
+pctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+pctx.fillStyle="rgba(0,255,255,.55)";
+pctx.fill();
+});
+
+requestAnimationFrame(drawParticles);
+}
+
+/* REVEAL */
+function reveal(){
+document.querySelectorAll(".card").forEach(card=>{
+if(card.getBoundingClientRect().top < innerHeight-80){
+card.classList.add("active");
+}
+});
+}
+addEventListener("scroll",reveal);
+reveal();
+
+drawBG();
+drawStars();
+drawParticles();
+</script>
+
+</body>
+</html>
